@@ -1,13 +1,11 @@
-import abc from './test'
-// import abc, { test1 } from './test'
-// import { test } from './test'
-// import * as abc from './test'
+import React from 'react'
+import ReactDOM from 'react-dom'
+
+const App = () => {
+    return <div>
+        <h1>Hell</h1>
+    </div>
+}
 
 
-console.log(abc.test)
-console.log(abc.test1)
-console.log(abc.test2)
-
-console.log('bac');
-
-console.log(abc);
+ReactDOM.render(<App />, document.getElementById('root'))
