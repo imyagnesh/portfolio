@@ -4,16 +4,24 @@ module.exports = {
     es2020: true,
     node: true,
   },
-  extends: ["plugin:react/recommended", "airbnb"],
+  parser: 'babel-eslint',
+  extends: [
+    'plugin:react/recommended',
+    'plugin:prettier/recommended',
+    'airbnb',
+    'plugin:jsx-control-statements/recommended',
+  ],
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
     },
     ecmaVersion: 11,
-    sourceType: "module",
+    sourceType: 'module',
   },
-  plugins: ["react"],
+  plugins: ['react', 'import', 'jsx-a11y', 'react-hooks', 'prettier', 'jsx-control-statements'],
   rules: {
-    "react/jsx-filename-extension": [1, { extensions: [".js", ".jsx"] }],
+    'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
+    'prettier/prettier': [2],
+    'react/jsx-no-undef': [2, { allowGlobals: true }],
   },
 };
