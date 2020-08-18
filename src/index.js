@@ -4,4 +4,4 @@ import App from './App';
 
 import './style.css';
 
-ReactDOM.render(<App desc="I am fine" />, document.getElementById('root'));
+ReactDOM.render(<App />, document.getElementById('root'));

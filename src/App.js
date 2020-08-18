@@ -1,28 +1,51 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useRef } from 'react';
 
-const App = ({ text, desc }) => (
-  <div className="container">
-    <Choose>
-      <When condition="text">
-        <h1>{text}</h1>
-      </When>
-      <Otherwise>
-        <h1>No Data</h1>
-      </Otherwise>
-    </Choose>
+const App = () => {
+  const [todoList, setTodoList] = useState([]);
+  const todoInput = useRef(null);
 
-    <h1>{desc}</h1>
-  </div>
-);
+  const onSubmit = () => {
+    const { value } = todoInput.current;
+    setTodoList([{ id: Date.now() + Math.random(), text: value, isDone: false }, ...todoList]);
+    todoInput.current.value = '';
+  };
 
-App.propTypes = {
-  text: PropTypes.string,
-  desc: PropTypes.string.isRequired,
-};
+  const onComplete = (id) => {
+    const newTodos = todoList.map((x) => {
+      if (x.id === id) {
+        return { ...x, isDone: !x.isDone };
+      }
+      return x;
+    });
+    setTodoList(newTodos);
+  };
 
-App.defaultProps = {
-  text: '',
+  return (
+    <>
+      <h1>Todo App</h1>
+      <div>
+        <input type="text" name="todo" id="todo" ref={todoInput} />
+        <button type="button" onClick={onSubmit}>
+          Add Todo
+        </button>
+      </div>
+      <div>
+        {todoList.map((todo) => (
+          <div>
+            <input type="checkbox" name="isDone" onChange={() => onComplete(todo.id)} />
+            <p
+              key={todo.id}
+              style={{
+                textDecoration: todo.isDone ? 'line-through' : 'none',
+              }}
+            >
+              {todo.text}
+            </p>
+          </div>
+        ))}
+      </div>
+    </>
+  );
 };
 
 export default App;
