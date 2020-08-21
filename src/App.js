@@ -1,57 +1,12 @@
-import React, { useState, useRef, useReducer } from 'react';
-
-const initialState = [];
-
-const todoReducer = (state = initialState, { type, payload }) => {
-  switch (type) {
-    case 'ADD_TODO':
-      return [{ id: Date.now() + Math.random(), text: payload, isDone: false }, ...state];
-
-    case 'REMOVE_TODO':
-      return state.filter((x) => x.id !== payload);
-
-    case 'COMPLETE_TODO':
-      return state.map((x) => {
-        if (x.id === payload) {
-          return { ...x, isDone: !x.isDone };
-        }
-        return x;
-      });
-
-    default:
-      return state;
-  }
-};
+import React, { useReducer } from 'react';
+import { todoReducer, initialState } from './reducers/todoReducer';
 
 const App = () => {
-  const [todoList, dispatch] = useReducer(todoReducer, initialState);
-  const [status, setStatus] = useState('all');
-  const todoInput = useRef(null);
+  const [todo, dispatch] = useReducer(todoReducer, initialState);
 
   const onSubmit = (e) => {
     e.preventDefault();
-    const { value } = todoInput.current;
-    dispatch({ type: 'ADD_TODO', payload: value });
-    setStatus('all');
-    todoInput.current.value = '';
-  };
-
-  const changeStatus = (e) => {
-    setStatus(e.target.name);
-  };
-
-  const getFilteredList = () => {
-    console.log('hello');
-    return todoList.filter((x) => {
-      switch (status) {
-        case 'pending':
-          return x.isDone === false;
-        case 'completed':
-          return x.isDone === true;
-        default:
-          return true;
-      }
-    });
+    dispatch({ type: 'ADD_TODO' });
   };
 
   return (
@@ -59,13 +14,18 @@ const App = () => {
       <h1>Todo App</h1>
       <div>
         <form onSubmit={onSubmit}>
-          <input type="text" name="todo" id="todo" ref={todoInput} />
+          <input
+            type="text"
+            name="todo"
+            value={todo.todoText}
+            onChange={(e) => dispatch({ type: 'CHANGE_TEXT', payload: e.target.value })}
+          />
           <button type="submit">Add Todo</button>
         </form>
       </div>
       <div>
-        <For each="todo" of={getFilteredList()}>
-          <div>
+        <For each="todo" of={todo.filteredData}>
+          <div key={todo.id}>
             <input
               type="checkbox"
               name="isDone"
@@ -90,13 +50,25 @@ const App = () => {
         </For>
       </div>
       <div>
-        <button type="button" name="all" onClick={changeStatus}>
+        <button
+          type="button"
+          name="all"
+          onClick={() => dispatch({ type: 'CHANGE_STATUS', payload: 'all' })}
+        >
           ALL
         </button>
-        <button type="button" name="pending" onClick={changeStatus}>
+        <button
+          type="button"
+          name="pending"
+          onClick={() => dispatch({ type: 'CHANGE_STATUS', payload: 'pending' })}
+        >
           PENDING
         </button>
-        <button type="button" name="completed" onClick={changeStatus}>
+        <button
+          type="button"
+          name="completed"
+          onClick={() => dispatch({ type: 'CHANGE_STATUS', payload: 'completed' })}
+        >
           COMPLETED
         </button>
       </div>
