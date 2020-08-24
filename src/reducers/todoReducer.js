@@ -3,6 +3,8 @@ export const initialState = {
   status: 'all',
   data: [],
   filteredData: [],
+  loading: false,
+  error: null,
 };
 
 export const todoReducer = (state, { type, payload }) => {
@@ -10,11 +12,18 @@ export const todoReducer = (state, { type, payload }) => {
     case 'CHANGE_TEXT':
       return { ...state, todoText: payload };
 
+    case 'LOADING':
+      return { ...state, loading: payload };
+
+    case 'ERROR':
+      return { ...state, error: payload };
+
+    case 'LOAD_TODO': {
+      return { ...state, data: payload, filteredData: payload };
+    }
+
     case 'ADD_TODO': {
-      const newTodo = [
-        ...state.data,
-        { id: Date.now() + Math.random(), text: state.todoText, isDone: false },
-      ];
+      const newTodo = [...state.data, payload];
       return {
         ...state,
         data: newTodo,
